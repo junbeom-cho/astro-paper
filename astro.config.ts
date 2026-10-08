@@ -43,6 +43,8 @@ export default defineConfig({
       ],
       rehypePlugins: [rehypeCallouts],
     }),
+    // mermaid blocks are rendered client-side by src/scripts/mermaid.ts
+    syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid", "math"] },
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },
       defaultColor: false,
