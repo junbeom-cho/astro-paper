@@ -2,6 +2,10 @@
 
 항상 한국어로 답한다. 코드, 명령어, 파일 경로, 커밋 메시지 접두사 같은 기술 용어는 원문 그대로 둔다.
 
+## 기능 추가
+
+마크다운 문법, 플러그인 같은 기능을 추가하면 사용법을 보여주는 예시 글을 `src/content/posts/<기능>-example.md`로 함께 만든다. 예: `mermaid-example.md`.
+
 ## Development
 
 When starting the dev server, use background mode:
