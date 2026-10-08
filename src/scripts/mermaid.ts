@@ -51,7 +51,11 @@ async function renderDiagrams(): Promise<void> {
 
 // Serialize runs: page loads and theme toggles can fire back to back.
 function scheduleRender(): void {
-  queue = queue.then(renderDiagrams);
+  queue = queue.then(renderDiagrams).catch(() => {
+    // The mermaid chunk failed to load: forget it so the next run retries
+    // instead of every later run inheriting the rejection.
+    mermaidPromise = undefined;
+  });
 }
 
 document.addEventListener("astro:page-load", scheduleRender);
