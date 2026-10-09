@@ -4,6 +4,7 @@ export default {
   nav: {
     home: "Home",
     posts: "Posts",
+    categories: "Categories",
     tags: "Tags",
     about: "About",
     archives: "Archives",
@@ -41,6 +42,12 @@ export default {
   pages: {
     tagTitle: "Tag",
     tagDesc: "All the articles with the tag",
+
+    categoryTitle: "Category",
+    categoryDesc: "All the articles in the category",
+
+    categoriesTitle: "Categories",
+    categoriesDesc: "All the categories used in posts.",
 
     tagsTitle: "Tags",
     tagsDesc: "All the tags used in posts.",

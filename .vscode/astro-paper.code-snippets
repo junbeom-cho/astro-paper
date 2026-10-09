@@ -10,6 +10,7 @@
       "title: $4",
       "featured: ${5|false,true|}",
       "draft: ${6|true,false|}",
+      "category: $9",
       "tags:",
       "  - $7",
       "description: $8",

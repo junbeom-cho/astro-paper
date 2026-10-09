@@ -1,5 +1,6 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import PostLayout from "@/layouts/PostLayout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -71,6 +72,7 @@ const {
   modDatetime,
   timezone,
   tags,
+  category,
   hideEditPost,
 } = post.data;
 
@@ -126,6 +128,16 @@ const ogImage = ogImageUrl
 
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      <span aria-hidden="true" class="text-muted-foreground">|</span>
+      <a
+        href={getRelativeLocaleUrl(
+          locale,
+          `categories/${slugifyStr(category)}/`
+        )}
+        class="hover:text-accent focus-visible:text-accent text-lg underline decoration-dashed underline-offset-4"
+      >
+        {category}
+      </a>
       <span
         aria-hidden="true"
         class:list={[
