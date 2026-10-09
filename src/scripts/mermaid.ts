@@ -15,6 +15,50 @@ function showSource(diagram: HTMLElement): void {
   diagram.replaceChildren(pre);
 }
 
+// t of color a over color b, both "#rrggbb"
+function mix(a: string, b: string, t: number): string {
+  const channel = (hex: string, i: number) => parseInt(hex.slice(i, i + 2), 16);
+  return `#${[1, 3, 5]
+    .map(i =>
+      Math.round(channel(a, i) * t + channel(b, i) * (1 - t))
+        .toString(16)
+        .padStart(2, "0")
+    )
+    .join("")}`;
+}
+
+// Mermaid's "base" theme is the only one that takes custom colors, and only
+// as hex, so the site's palette (theme.css, kept as #rrggbb) is read at render time.
+function themeVariables(darkMode: boolean) {
+  const css = getComputedStyle(document.documentElement);
+  const token = (name: string) => css.getPropertyValue(`--${name}`).trim();
+  const accent = token("accent");
+  const background = token("background");
+  return {
+    darkMode,
+    background,
+    primaryColor: mix(accent, background, 0.15),
+    primaryBorderColor: accent,
+    primaryTextColor: token("foreground"),
+    textColor: token("foreground"),
+    lineColor: token("muted-foreground"),
+    clusterBkg: token("muted"),
+    clusterBorder: token("border"),
+    edgeLabelBackground: background,
+    // Pie: accent shades instead of the pale hue-rotated defaults (pie5+ keep them)
+    pie1: mix(accent, background, 0.5),
+    pie2: mix(accent, background, 0.32),
+    pie3: mix(accent, background, 0.18),
+    pie4: mix(accent, background, 0.08),
+    pieSectionTextColor: token("foreground"),
+    pieStrokeColor: background,
+    pieOuterStrokeColor: token("border"),
+    // Gantt: done tasks default to light grey, glaring in dark mode
+    doneTaskBkgColor: token("muted"),
+    doneTaskBorderColor: token("muted-foreground"),
+  };
+}
+
 async function renderDiagrams(): Promise<void> {
   document
     .querySelectorAll<HTMLElement>("pre > code.language-mermaid")
@@ -26,8 +70,8 @@ async function renderDiagrams(): Promise<void> {
       code.parentElement?.replaceWith(diagram);
     });
 
-  const theme =
-    document.documentElement.dataset.theme === "dark" ? "dark" : "default";
+  const dark = document.documentElement.dataset.theme === "dark";
+  const theme = dark ? "dark" : "light";
   const pending = Array.from(
     document.querySelectorAll<HTMLElement>(".mermaid-diagram")
   ).filter(diagram => diagram.dataset.renderedTheme !== theme);
@@ -43,7 +87,8 @@ async function renderDiagrams(): Promise<void> {
   const mermaid = await mermaidPromise;
   mermaid.initialize({
     startOnLoad: false,
-    theme,
+    theme: "base",
+    themeVariables: themeVariables(dark),
     fontFamily,
     suppressErrorRendering: true,
   });
