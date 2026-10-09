@@ -3,6 +3,9 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
+import IconFolder from "@/assets/icons/IconFolder.svg";
+import IconHash from "@/assets/icons/IconHash.svg";
+import IconUser from "@/assets/icons/IconUser.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
@@ -26,6 +29,11 @@ const pathWithoutTrailingSlash =
     : relativePath;
 
 const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
+
+// Menu icons show in the mobile menu and the xl sidebar, not in the
+// compact sm-lg top bar.
+const navIconClass =
+  "me-2 inline-block size-5 align-[-0.2em] sm:hidden xl:inline-block";
 
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
@@ -80,6 +88,7 @@ const isActive = (path: string) => {
             href={getRelativeLocaleUrl(locale, "categories")}
             class:list={{ "active-nav": isActive("/categories") }}
           >
+            <IconFolder aria-hidden="true" class={navIconClass} />
             {t.nav.categories}
           </a>
         </li>
@@ -88,6 +97,7 @@ const isActive = (path: string) => {
             href={getRelativeLocaleUrl(locale, "tags")}
             class:list={{ "active-nav": isActive("/tags") }}
           >
+            <IconHash aria-hidden="true" class={navIconClass} />
             {t.nav.tags}
           </a>
         </li>
@@ -96,6 +106,7 @@ const isActive = (path: string) => {
             href={getRelativeLocaleUrl(locale, "about")}
             class:list={{ "active-nav": isActive("/about") }}
           >
+            <IconUser aria-hidden="true" class={navIconClass} />
             {t.nav.about}
           </a>
         </li>
@@ -111,7 +122,10 @@ const isActive = (path: string) => {
                 title={t.nav.archives}
                 aria-label={t.nav.archives}
               >
-                <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2 xl:hidden" />
+                <IconArchive
+                  aria-hidden="true"
+                  class="me-2 inline-block size-5 align-[-0.2em] sm:absolute sm:top-1/2 sm:left-1/2 sm:me-0 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2 xl:static xl:me-2 xl:inline-block xl:size-5 xl:translate-x-0 xl:translate-y-0"
+                />
                 <span class="sm:sr-only xl:not-sr-only">{t.nav.archives}</span>
                 {isActive("/archives") && (
                   <IconUnderline
