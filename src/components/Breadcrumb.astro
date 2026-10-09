@@ -25,7 +25,6 @@ const decodeSegment = (value: string) => {
 };
 
 const navLabels: Record<string, string> = {
-  posts: t.nav.posts,
   categories: t.nav.categories,
   tags: t.nav.tags,
   about: t.nav.about,
@@ -41,14 +40,6 @@ const crumbs = segments.map((segment, i) => ({
   label: navLabels[segment] ?? decodeSegment(segment),
   href: getRelativeLocaleUrl(locale, segments.slice(0, i + 1).join("/")),
 }));
-
-// Home > Posts > [page] => Home > Posts (page number)
-if (segments[0] === "posts") {
-  crumbs.splice(0, 2, {
-    label: `${t.nav.posts} ${pageLabel(segments[1] || "1")}`,
-    href: "",
-  });
-}
 
 // Home > Tags|Categories > ... > [name] > [page] => ... > [name] (page number)
 const lastSegment = segments.at(-1) ?? "";
