@@ -62,6 +62,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // Pre-bundle deps the browser only imports dynamically, so the dev server
+    // doesn't discover them mid-session and serve stale chunks (504).
+    optimizeDeps: { include: ["mermaid", "@pagefind/default-ui"] },
   },
   fonts: [
     {

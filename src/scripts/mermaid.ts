@@ -7,6 +7,14 @@ let mermaidPromise: Promise<Mermaid> | undefined;
 let queue = Promise.resolve();
 let idCounter = 0;
 
+// Show the diagram source instead of a blank space.
+function showSource(diagram: HTMLElement): void {
+  const pre = document.createElement("pre");
+  pre.className = "text-foreground border border-border";
+  pre.textContent = diagram.dataset.source ?? "";
+  diagram.replaceChildren(pre);
+}
+
 async function renderDiagrams(): Promise<void> {
   document
     .querySelectorAll<HTMLElement>("pre > code.language-mermaid")
@@ -46,11 +54,7 @@ async function renderDiagrams(): Promise<void> {
       const { svg } = await mermaid.render(`mermaid-${idCounter++}`, source);
       diagram.innerHTML = svg;
     } catch {
-      // Invalid diagram: show the source instead of a blank space.
-      const pre = document.createElement("pre");
-      pre.className = "text-foreground border border-border";
-      pre.textContent = source;
-      diagram.replaceChildren(pre);
+      showSource(diagram); // invalid diagram
     }
     diagram.dataset.renderedTheme = theme;
   }
@@ -59,8 +63,11 @@ async function renderDiagrams(): Promise<void> {
 // Serialize runs: page loads and theme toggles can fire back to back.
 function scheduleRender(): void {
   queue = queue.then(renderDiagrams).catch(() => {
-    // The mermaid chunk failed to load: forget it so the next run retries
-    // instead of every later run inheriting the rejection.
+    // The mermaid chunk failed to load: show the sources for now and forget
+    // the failed import so the next run retries.
+    document
+      .querySelectorAll<HTMLElement>(".mermaid-diagram:empty")
+      .forEach(showSource);
     mermaidPromise = undefined;
   });
 }
