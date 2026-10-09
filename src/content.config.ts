@@ -16,8 +16,15 @@ const posts = defineCollection({
       featured: z.boolean().optional(),
       draft: z.boolean().optional(),
       tags: z.array(z.string()).default(["others"]),
-      // One category per post; posts without one go to "기타"
-      category: z.string().default("기타"),
+      // One category per post, up to 2 levels: "개발" or "개발/Astro".
+      // Posts without one go to "기타".
+      category: z
+        .string()
+        .default("기타")
+        .refine(
+          value => /^[^/]+(\/[^/]+)?$/.test(value.trim()),
+          'category must be "Parent" or "Parent/Child"'
+        ),
       ogImage: image().or(z.string()).optional(),
       description: z.string(),
       canonicalURL: z.string().optional(),

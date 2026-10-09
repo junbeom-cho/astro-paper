@@ -8,27 +8,27 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import Card from "@/components/Card.astro";
 import Footer from "@/components/Footer.astro";
 import Pagination from "@/components/Pagination.astro";
-import { getUniqueCategories } from "@/utils/getUniqueCategories";
+import { getCategoryTree, getPostsInCategory } from "@/utils/categories";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { slugifyStr } from "@/utils/slugify";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
+// Subcategory, e.g. /categories/개발/astro/
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getCollection("posts");
-  const categories = getUniqueCategories(posts);
 
-  return categories.flatMap(({ category, categoryName }) => {
-    const categoryPosts = getSortedPosts(
-      posts.filter(({ data }) => slugifyStr(data.category) === category)
-    );
-
-    return paginate(categoryPosts, {
-      params: { category },
-      props: { categoryName },
-      pageSize: config.posts.perPage,
-    });
-  });
+  return getCategoryTree(posts).flatMap(parent =>
+    parent.children.flatMap(child =>
+      paginate(
+        getSortedPosts(getPostsInCategory(posts, [parent.slug, child.slug])),
+        {
+          params: { parent: parent.slug, child: child.slug },
+          props: { categoryName: `${parent.name} / ${child.name}` },
+          pageSize: config.posts.perPage,
+        }
+      )
+    )
+  );
 }
 
 const { page, categoryName } = Astro.props;

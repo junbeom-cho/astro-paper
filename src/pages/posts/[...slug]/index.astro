@@ -9,6 +9,7 @@ import Tag from "@/components/Tag.astro";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
+import { getCategoryPath, parseCategory } from "@/utils/categories";
 import { toTransitionName } from "@/utils/toTransitionName";
 import EditPost from "./_components/EditPost.astro";
 import ShareLinks from "./_components/ShareLinks.astro";
@@ -78,6 +79,15 @@ const {
 
 const { Content, headings } = await render(post);
 
+// "개발/Astro" → links to /categories/개발/ and /categories/개발/astro/
+const categoryLevels = parseCategory(category).map((level, i, levels) => ({
+  ...level,
+  href: getRelativeLocaleUrl(
+    locale,
+    `categories/${getCategoryPath(levels.slice(0, i + 1))}/`
+  ),
+}));
+
 let ogImageUrl: string | undefined;
 
 if (typeof initOgImage === "string") {
@@ -129,15 +139,23 @@ const ogImage = ogImageUrl
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
       <span aria-hidden="true" class="text-muted-foreground">|</span>
-      <a
-        href={getRelativeLocaleUrl(
-          locale,
-          `categories/${slugifyStr(category)}/`
-        )}
-        class="hover:text-accent focus-visible:text-accent text-lg underline decoration-dashed underline-offset-4"
-      >
-        {category}
-      </a>
+      {
+        categoryLevels.map(({ name, href }, i) => (
+          <>
+            {i > 0 && (
+              <span aria-hidden="true" class="text-muted-foreground">
+                /
+              </span>
+            )}
+            <a
+              href={href}
+              class="hover:text-accent focus-visible:text-accent text-lg underline decoration-dashed underline-offset-4"
+            >
+              {name}
+            </a>
+          </>
+        ))
+      }
       <span
         aria-hidden="true"
         class:list={[

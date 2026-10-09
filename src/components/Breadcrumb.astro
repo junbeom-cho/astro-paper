@@ -13,8 +13,8 @@ const pathWithoutBase = stripBase(Astro.url.pathname).replace(/\/+$/, "");
 const currentUrlPath = stripLocale(pathWithoutBase, locale);
 
 // Get url array from path
-// eg: /tags/tailwindcss => ['tags', 'tailwindcss']
-const breadcrumbList = currentUrlPath.split("/").slice(1).filter(Boolean);
+// eg: /categories/개발/astro/2 => ['categories', '개발', 'astro', '2']
+const segments = currentUrlPath.split("/").slice(1).filter(Boolean);
 
 const decodeSegment = (value: string) => {
   try {
@@ -33,31 +33,35 @@ const navLabels: Record<string, string> = {
   search: t.nav.search,
 };
 
-// if breadcrumb is Home > Posts > [page] <etc>
-// replace Posts with localized "Posts (page number)"
-if (breadcrumbList[0] === "posts") {
-  breadcrumbList.splice(
-    0,
-    2,
-    `${t.nav.posts} (${t.pagination.page.toLowerCase()} ${breadcrumbList[1] || 1})`
-  );
+const pageLabel = (page: string) =>
+  `(${t.pagination.page.toLowerCase()} ${page})`;
+
+// Each crumb links to the path up to its segment, eg: /categories/개발
+const crumbs = segments.map((segment, i) => ({
+  label: navLabels[segment] ?? decodeSegment(segment),
+  href: getRelativeLocaleUrl(locale, segments.slice(0, i + 1).join("/")),
+}));
+
+// Home > Posts > [page] => Home > Posts (page number)
+if (segments[0] === "posts") {
+  crumbs.splice(0, 2, {
+    label: `${t.nav.posts} ${pageLabel(segments[1] || "1")}`,
+    href: "",
+  });
 }
 
-// if breadcrumb is Home > Tags|Categories > [name] > [page] <etc>
-// replace [name] > [page] with localized [name] (page number)
+// Home > Tags|Categories > ... > [name] > [page] => ... > [name] (page number)
+const lastSegment = segments.at(-1) ?? "";
 if (
-  (breadcrumbList[0] === "tags" || breadcrumbList[0] === "categories") &&
-  !isNaN(Number(breadcrumbList[2]))
+  (segments[0] === "tags" || segments[0] === "categories") &&
+  segments.length > 2 &&
+  !isNaN(Number(lastSegment))
 ) {
-  breadcrumbList.splice(
-    1,
-    3,
-    `${decodeSegment(breadcrumbList[1])} ${
-      Number(breadcrumbList[2]) === 1
-        ? ""
-        : `(${t.pagination.page.toLowerCase()} ${breadcrumbList[2]})`
-    }`
-  );
+  crumbs.pop();
+  const nameCrumb = crumbs.at(-1);
+  if (nameCrumb && lastSegment !== "1") {
+    nameCrumb.label += ` ${pageLabel(lastSegment)}`;
+  }
 }
 ---
 
@@ -72,24 +76,21 @@ if (
       <span aria-hidden="true" class="opacity-80">&raquo;</span>
     </li>
     {
-      breadcrumbList.map((breadcrumb, index) =>
-        index + 1 === breadcrumbList.length ? (
+      crumbs.map(({ label, href }, index) =>
+        index + 1 === crumbs.length ? (
           <li>
             <span
               class:list={["capitalize opacity-75", { lowercase: index > 0 }]}
               aria-current="page"
             >
               {/* make the last part lowercase in Home > Tags > some-tag */}
-              {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}
+              {label}
             </span>
           </li>
         ) : (
           <li class="flex items-center gap-x-1">
-            <a
-              href={getRelativeLocaleUrl(locale, breadcrumb)}
-              class="capitalize opacity-70"
-            >
-              {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}
+            <a href={href} class="capitalize opacity-70">
+              {label}
             </a>
             <span aria-hidden="true" class="opacity-70">
               &raquo;

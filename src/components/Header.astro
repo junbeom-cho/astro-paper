@@ -42,21 +42,22 @@ const isActive = (path: string) => {
   {t.a11y.skipToContent}
 </a>
 
+<!-- xl+: fixed column left of the 48rem content, mirroring the TOC on the right -->
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  class="app-layout flex flex-col items-center justify-between sm:flex-row xl:fixed xl:inset-e-[calc(50%+25rem)] xl:top-0 xl:mx-0 xl:h-svh xl:w-56 xl:flex-col xl:items-stretch xl:justify-start xl:overflow-y-auto xl:px-0"
 >
   <div
-    class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"
+    class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6 xl:flex-col xl:items-start xl:justify-start xl:gap-8 xl:border-b-0 xl:py-10"
   >
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none xl:my-0 xl:whitespace-normal"
     >
       {site.title}
     </a>
     <nav
       id="nav-menu"
-      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
+      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0 xl:ms-0 xl:flex-col xl:items-start xl:space-x-0"
     >
       <button
         id="menu-btn"
@@ -72,9 +73,9 @@ const isActive = (path: string) => {
       </button>
       <ul
         id="menu-items"
-        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&>li]:h-8 [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1"
+        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 xl:w-full xl:flex-wrap xl:place-content-start xl:gap-x-2 xl:gap-y-1 sm:[&>li]:h-8 xl:[&>li]:h-auto [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1 xl:[&>li>a]:px-0 xl:[&>li>a]:text-start"
       >
-        <li class="col-span-2">
+        <li class="col-span-2 xl:w-full">
           <a
             href={getRelativeLocaleUrl(locale, "posts")}
             class:list={{ "active-nav": isActive("/posts") }}
@@ -82,7 +83,7 @@ const isActive = (path: string) => {
             {t.nav.posts}
           </a>
         </li>
-        <li class="col-span-2">
+        <li class="col-span-2 xl:w-full">
           <a
             href={getRelativeLocaleUrl(locale, "categories")}
             class:list={{ "active-nav": isActive("/categories") }}
@@ -90,7 +91,7 @@ const isActive = (path: string) => {
             {t.nav.categories}
           </a>
         </li>
-        <li class="col-span-2">
+        <li class="col-span-2 xl:w-full">
           <a
             href={getRelativeLocaleUrl(locale, "tags")}
             class:list={{ "active-nav": isActive("/tags") }}
@@ -98,7 +99,7 @@ const isActive = (path: string) => {
             {t.nav.tags}
           </a>
         </li>
-        <li class="col-span-2">
+        <li class="col-span-2 xl:w-full">
           <a
             href={getRelativeLocaleUrl(locale, "about")}
             class:list={{ "active-nav": isActive("/about") }}
@@ -108,22 +109,22 @@ const isActive = (path: string) => {
         </li>
         {
           features.showArchives && (
-            <li class="col-span-2">
+            <li class="col-span-2 xl:w-full">
               <LinkButton
                 href={getRelativeLocaleUrl(locale, "archives")}
                 class:list={[
-                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0",
+                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0 xl:size-auto xl:justify-start xl:py-1",
                   { "active-nav": isActive("/archives") },
                 ]}
                 title={t.nav.archives}
                 aria-label={t.nav.archives}
               >
-                <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" />
-                <span class="sm:sr-only">{t.nav.archives}</span>
+                <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2 xl:hidden" />
+                <span class="sm:sr-only xl:not-sr-only">{t.nav.archives}</span>
                 {isActive("/archives") && (
                   <IconUnderline
                     aria-hidden="true"
-                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
+                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6 xl:hidden"
                   />
                 )}
               </LinkButton>
@@ -132,7 +133,7 @@ const isActive = (path: string) => {
         }
         {
           features.search !== false && (
-            <li class="col-span-1 flex items-center justify-center">
+            <li class="col-span-1 flex items-center justify-center xl:mt-3 xl:justify-start">
               <LinkButton
                 href={getRelativeLocaleUrl(locale, "search")}
                 class:list={["focus-outline relative size-8"]}
@@ -153,7 +154,7 @@ const isActive = (path: string) => {
         }
         {
           features.lightAndDarkMode && (
-            <li class="col-span-1 flex items-center justify-center">
+            <li class="col-span-1 flex items-center justify-center xl:mt-3 xl:justify-start">
               <button
                 id="theme-btn"
                 class="focus-outline hover:[&>svg]:stroke-accent relative size-12 p-4 sm:size-8"
