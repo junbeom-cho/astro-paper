@@ -49,7 +49,8 @@ export default defineConfig({
     // mermaid blocks are rendered client-side by src/scripts/mermaid.ts
     syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid", "math"] },
     shikiConfig: {
-      themes: { light: "min-light", dark: "night-owl" },
+      // github-light: comments meet 4.5:1 contrast (min-light was ~1.8:1)
+      themes: { light: "github-light", dark: "night-owl" },
       defaultColor: false,
       wrap: false,
       transformers: [

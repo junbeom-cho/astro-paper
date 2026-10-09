@@ -222,20 +222,27 @@ const ogImage = ogImageUrl
   createProgressBar();
 
   function updateScrollProgress() {
-    document.addEventListener("scroll", () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
+    // Re-runs on every page navigation: replace the previous listener
+    window.__progressScroll?.abort();
+    window.__progressScroll = new AbortController();
+    document.addEventListener(
+      "scroll",
+      () => {
+        const winScroll =
+          document.body.scrollTop || document.documentElement.scrollTop;
+        const height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        if (document) {
+          const myBar = document.getElementById("myBar");
+          if (myBar) {
+            myBar.style.width = scrolled + "%";
+          }
         }
-      }
-    });
+      },
+      { passive: true, signal: window.__progressScroll.signal }
+    );
   }
   updateScrollProgress();
 
@@ -246,6 +253,10 @@ const ogImage = ogImageUrl
     for (const heading of headings) {
       heading.classList.add("group");
       const link = document.createElement("a");
+      link.setAttribute(
+        "aria-label",
+        "Link to section: " + heading.textContent.trim()
+      );
       link.className =
         "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
       link.href = "#" + heading.id;

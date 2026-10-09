@@ -73,15 +73,22 @@ const t = useTranslations(Astro.currentLocale);
     }
 
     let ticking = false;
-    document.addEventListener("scroll", () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
+    // Re-runs on every page navigation: replace the previous listener
+    window.__backToTopScroll?.abort();
+    window.__backToTopScroll = new AbortController();
+    document.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            handleScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      },
+      { passive: true, signal: window.__backToTopScroll.signal }
+    );
   }
   backToTop();
 </script>
