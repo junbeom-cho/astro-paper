@@ -27,6 +27,7 @@ export default defineAstroPaperConfig({
   },
   socials: [
     { name: "github",   url: "https://github.com/junbeom-cho/astro-paper" },
+    { name: "wiki",     url: "https://wiki.techbara.dev", linkTitle: "Wiki" },
     { name: "linkedin", url: "https://www.linkedin.com/in/%EC%A4%80%EB%B2%94-%EC%A1%B0-13927b419/" },
     { name: "mail",     url: "mailto:dev.junbeom@gmail.com" },
   ],
