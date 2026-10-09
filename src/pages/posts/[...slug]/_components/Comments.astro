@@ -1,0 +1,53 @@
+---
+// giscus comments, stored in this repo's GitHub Discussions.
+---
+
+<section id="comments" data-pagefind-ignore></section>
+
+<script>
+  // Settings from https://giscus.app for junbeom-cho/astro-paper
+  const GISCUS = {
+    repo: "junbeom-cho/astro-paper",
+    repoId: "R_kgDOU_y6fA",
+    category: "Commnets",
+    categoryId: "DIC_kwDOU_y6fM4DHcQz",
+    mapping: "pathname",
+    strict: "0",
+    reactionsEnabled: "1",
+    emitMetadata: "0",
+    inputPosition: "bottom",
+    lang: "ko",
+    loading: "lazy",
+  };
+
+  // Follow the site's theme toggle instead of the OS setting.
+  // transparent_dark blends with the site's own dark background.
+  const giscusTheme = () =>
+    document.documentElement.dataset.theme === "dark"
+      ? "transparent_dark"
+      : "light";
+
+  // The page body is swapped on navigation, so mount giscus on every page load
+  function mount(): void {
+    const container = document.querySelector("#comments");
+    if (!container || container.childElementCount > 0) return;
+
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    Object.assign(script.dataset, GISCUS, { theme: giscusTheme() });
+    container.append(script);
+  }
+
+  new MutationObserver(() => {
+    document
+      .querySelector<HTMLIFrameElement>("iframe.giscus-frame")
+      ?.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme() } } },
+        "https://giscus.app"
+      );
+  }).observe(document.documentElement, { attributeFilter: ["data-theme"] });
+
+  document.addEventListener("astro:page-load", mount);
+</script>
