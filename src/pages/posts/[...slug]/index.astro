@@ -135,7 +135,7 @@ const ogImage = ogImageUrl
     <h1
       lang="ko"
       style={{ viewTransitionName: toTransitionName(post.id) }}
-      class="text-accent inline-block text-2xl font-bold sm:text-3xl"
+      class="text-foreground inline-block text-2xl font-bold sm:text-3xl"
     >
       {title}
     </h1>
@@ -155,7 +155,7 @@ const ogImage = ogImageUrl
             )}
             <a
               href={href}
-              class="hover:text-accent focus-visible:text-accent text-lg underline decoration-dashed underline-offset-4"
+              class="text-accent decoration-accent/40 hover:decoration-accent text-lg underline underline-offset-4"
             >
               {name}
             </a>
@@ -177,11 +177,7 @@ const ogImage = ogImageUrl
     <article
       id="article"
       lang="ko"
-      class:list={[
-        "mt-8 w-full",
-        "app-prose max-w-app",
-        "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
-      ]}
+      class:list={["mt-8 w-full", "app-prose max-w-app", "prose-pre:bg-code"]}
     >
       <Content />
     </article>
@@ -194,7 +190,7 @@ const ogImage = ogImageUrl
 
     <BackToTopButton />
 
-    <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+    <ul class="mt-4 mb-8 flex flex-wrap gap-2 sm:my-8">
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
     </ul>
 

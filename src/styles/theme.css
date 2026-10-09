@@ -7,29 +7,33 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-code: var(--code);
   --font-app: "Pretendard Variable", Pretendard, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono);
 }
 
-/* Light theme values */
+/* Light theme values (Obsidian default theme) */
 :root,
 [data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
+  --background: #ffffff;
+  --foreground: #222222;
+  /* Obsidian purple, slightly deeper for 4.5:1 text contrast (#8a5cf5 is 4.3:1) */
+  --accent: #7a4ce6;
   --accent-foreground: #ffffff;
-  --muted: #e6e6e6;
-  --muted-foreground: #6b7280;
-  --border: #ece9e9;
+  --muted: #f0f0f0;
+  --muted-foreground: #5c5c5c;
+  --border: #e0e0e0;
+  --code: #fafafa;
 }
 
-/* Dark theme values */
+/* Dark theme values (Obsidian default theme) */
 [data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --accent-foreground: #ffffff;
-  --muted: #343f60;
-  --muted-foreground: #afb9ca;
-  --border: #ab4b08;
+  --background: #1e1e1e;
+  --foreground: #dadada;
+  --accent: #a68af9;
+  --accent-foreground: #1e1e1e;
+  --muted: #2f2f2f;
+  --muted-foreground: #999999;
+  --border: #363636;
+  --code: #242424;
 }
