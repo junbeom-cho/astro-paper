@@ -130,7 +130,9 @@ const ogImage = ogImageUrl
     ]}
     data-pagefind-body
   >
+    <!-- Posts are written in Korean while the UI stays in site.lang -->
     <h1
+      lang="ko"
       style={{ viewTransitionName: toTransitionName(post.id) }}
       class="text-accent inline-block text-2xl font-bold sm:text-3xl"
     >
@@ -173,6 +175,7 @@ const ogImage = ogImageUrl
 
     <article
       id="article"
+      lang="ko"
       class:list={[
         "mt-8 w-full",
         "app-prose max-w-app",
