@@ -1,0 +1,7 @@
+{
+  "origins": ["https://blog.techbara.dev"],
+  "originsRegex": [
+    "http://localhost:[0-9]+",
+    "https://([a-z0-9-]+-)?astro-paper\\.[a-z0-9-]+\\.workers\\.dev"
+  ]
+}
