@@ -25,6 +25,7 @@ const items = Astro.props.headings.filter(
       data-pagefind-ignore
     >
       <nav
+        data-toc
         aria-label={t.post.onThisPage}
         class="sticky top-8 max-h-[calc(100svh-4rem)] overflow-y-auto text-sm"
       >
@@ -34,7 +35,7 @@ const items = Astro.props.headings.filter(
             <li class:list={[{ "ps-3": depth === 3 }]}>
               <a
                 href={`#${slug}`}
-                class="text-foreground/70 hover:text-accent wrap-break-word"
+                class="text-foreground/70 hover:text-accent aria-[current=location]:text-accent wrap-break-word aria-[current=location]:font-medium"
               >
                 {text}
               </a>
@@ -45,3 +46,57 @@ const items = Astro.props.headings.filter(
     </aside>
   )
 }
+
+<script>
+  // Marks the TOC link of the section being read with aria-current.
+  // px from the viewport top; TOC links land headings at 16px (:target scroll-margin)
+  const ACTIVE_OFFSET = 40;
+
+  let controller: AbortController | undefined;
+
+  function setup(): void {
+    controller?.abort(); // drop the previous page's scroll listener
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>("[data-toc] a")
+    );
+    if (links.length === 0) return;
+    controller = new AbortController();
+
+    const headings = links.map(link =>
+      document.getElementById(link.getAttribute("href")?.slice(1) ?? "")
+    );
+    // Browsers fire scroll at most once per frame, so no extra throttling.
+    const update = (): void => {
+      const root = document.documentElement;
+      // Headings near the end can never reach the top. At the bottom, prefer
+      // the heading just jumped to (if visible), else the last one.
+      const atBottom =
+        window.scrollY > 0 &&
+        window.innerHeight + window.scrollY >= root.scrollHeight - 2;
+      let active = -1;
+      if (atBottom) {
+        const target = links.findIndex(link => link.hash === location.hash);
+        const targetTop = headings[target]?.getBoundingClientRect().top ?? -1;
+        active = targetTop >= 0 ? target : headings.length - 1;
+      } else {
+        headings.forEach((heading, i) => {
+          if (heading && heading.getBoundingClientRect().top <= ACTIVE_OFFSET)
+            active = i;
+        });
+      }
+      links.forEach((link, i) =>
+        i === active
+          ? link.setAttribute("aria-current", "location")
+          : link.removeAttribute("aria-current")
+      );
+    };
+
+    window.addEventListener("scroll", update, {
+      passive: true,
+      signal: controller.signal,
+    });
+    update();
+  }
+
+  document.addEventListener("astro:page-load", setup);
+</script>
