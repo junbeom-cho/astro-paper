@@ -25,11 +25,18 @@ async function renderDiagrams(): Promise<void> {
   ).filter(diagram => diagram.dataset.renderedTheme !== theme);
   if (pending.length === 0) return;
 
+  // Same font as the body text. Mermaid sizes label boxes by measuring text,
+  // so load the glyphs first or labels overflow once the font swaps in.
+  const fontFamily = getComputedStyle(document.body).fontFamily;
+  const sources = pending.map(diagram => diagram.dataset.source).join("");
+  await document.fonts.load(`16px ${fontFamily}`, sources);
+
   mermaidPromise ??= import("mermaid").then(m => m.default);
   const mermaid = await mermaidPromise;
   mermaid.initialize({
     startOnLoad: false,
     theme,
+    fontFamily,
     suppressErrorRendering: true,
   });
 
