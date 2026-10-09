@@ -2,14 +2,14 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
-    title: "AstroPaper",
+    url: "https://blog.techbara.dev",
+    title: "Tech Blog",
     description: "A minimal, responsive and SEO-friendly Astro blog theme.",
-    author: "Sat Naing",
-    profile: "https://satna.ing",
+    author: "Junbeom Cho",
+    profile: "https://github.com/junbeom-cho",
     ogImage: "default-og.jpg",
     lang: "en",
-    timezone: "Asia/Bangkok",
+    timezone: "Asia/Seoul",
     dir: "ltr",
   },
   posts: {
@@ -26,10 +26,9 @@ export default defineAstroPaperConfig({
     search: "pagefind",
   },
   socials: [
-    { name: "github",   url: "https://github.com/satnaing/astro-paper" },
-    { name: "x",        url: "https://x.com/username" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
-    { name: "mail",     url: "mailto:yourmail@gmail.com" },
+    { name: "github",   url: "https://github.com/junbeom-cho/astro-paper" },
+    { name: "linkedin", url: "https://www.linkedin.com/in/%EC%A4%80%EB%B2%94-%EC%A1%B0-13927b419/" },
+    { name: "mail",     url: "mailto:dev.junbeom@gmail.com" },
   ],
   shareLinks: [
     { name: "whatsapp", url: "https://wa.me/?text=" },
