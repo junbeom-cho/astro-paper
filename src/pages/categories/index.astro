@@ -5,18 +5,37 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
 import Footer from "@/components/Footer.astro";
-import { getCategoryTree } from "@/utils/categories";
+import {
+  getCategoryTree,
+  getPostsInCategory,
+  parseCategory,
+} from "@/utils/categories";
+import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-const categories = getCategoryTree(await getCollection("posts"));
+const posts = getSortedPosts(await getCollection("posts"));
+
+// Each top-level category with its own posts, then each subcategory with its posts
+const categories = getCategoryTree(posts).map(parent => ({
+  ...parent,
+  posts: posts.filter(({ data }) => {
+    const levels = parseCategory(data.category);
+    return levels.length === 1 && levels[0].slug === parent.slug;
+  }),
+  children: parent.children.map(child => ({
+    ...child,
+    posts: getPostsInCategory(posts, [parent.slug, child.slug]),
+  })),
+}));
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
 
-const linkClass =
-  "hover:text-accent focus-visible:text-accent underline decoration-dashed underline-offset-4";
+const categoryUrl = (...slugs: string[]) =>
+  getRelativeLocaleUrl(locale, `categories/${slugs.join("/")}/`);
 ---
 
 <Layout title={`${t.pages.categoriesTitle} | ${config.site.title}`}>
@@ -25,41 +44,54 @@ const linkClass =
   <Breadcrumb />
 
   <Main pageTitle={t.pages.categoriesTitle} pageDesc={t.pages.categoriesDesc}>
-    <ul class="space-y-4">
+    <div class="space-y-8">
       {
         categories.map(parent => (
-          <li>
-            <a
-              href={getRelativeLocaleUrl(locale, `categories/${parent.slug}/`)}
-              class:list={[linkClass, "text-lg font-medium"]}
-            >
-              {parent.name}
-            </a>
-            <span class="text-muted-foreground ms-1">({parent.count})</span>
-            {parent.children.length > 0 && (
-              <ul class="border-border ms-1 mt-2 space-y-1.5 border-s ps-4">
-                {parent.children.map(child => (
-                  <li>
-                    <a
-                      href={getRelativeLocaleUrl(
-                        locale,
-                        `categories/${parent.slug}/${child.slug}/`
-                      )}
-                      class={linkClass}
-                    >
-                      {child.name}
-                    </a>
-                    <span class="text-muted-foreground ms-1 text-sm">
-                      ({child.count})
-                    </span>
-                  </li>
+          <section class="border-border rounded-lg border px-5 py-4">
+            <h2 class="text-xl font-semibold">
+              <a
+                href={categoryUrl(parent.slug)}
+                class="hover:text-accent focus-visible:text-accent"
+              >
+                {parent.name}
+              </a>
+              <span class="text-muted-foreground ms-1 text-base font-normal">
+                ({parent.count})
+              </span>
+            </h2>
+
+            {parent.posts.length > 0 && (
+              <ul class="[&>li]:my-4">
+                {parent.posts.map(post => (
+                  <Card variant="h3" {...post} />
                 ))}
               </ul>
             )}
-          </li>
+
+            {parent.children.map(child => (
+              <section class="border-border bg-muted/20 mt-4 rounded-md border px-4 py-3">
+                <h3 class="text-lg font-medium">
+                  <a
+                    href={categoryUrl(parent.slug, child.slug)}
+                    class="hover:text-accent focus-visible:text-accent"
+                  >
+                    {child.name}
+                  </a>
+                  <span class="text-muted-foreground ms-1 text-sm font-normal">
+                    ({child.count})
+                  </span>
+                </h3>
+                <ul class="[&>li]:my-3">
+                  {child.posts.map(post => (
+                    <Card variant="h4" {...post} />
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </section>
         ))
       }
-    </ul>
+    </div>
   </Main>
 
   <Footer />
