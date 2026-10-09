@@ -20,6 +20,7 @@ export interface UIStrings {
     previousPost: string;
     nextPost: string;
     onThisPage: string;
+    readingTime: string;
   };
   pagination: {
     prev: string;

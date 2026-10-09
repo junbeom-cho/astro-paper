@@ -22,6 +22,7 @@ export default {
     previousPost: "Previous Post",
     nextPost: "Next Post",
     onThisPage: "On this page",
+    readingTime: "{{minutes}} min read",
   },
   pagination: {
     prev: "Prev",

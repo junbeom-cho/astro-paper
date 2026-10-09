@@ -1,0 +1,29 @@
+---
+import IconClock from "@/assets/icons/IconClock.svg";
+import { tplStr, useTranslations } from "@/i18n";
+import { getReadingTime } from "@/utils/readingTime";
+
+type Props = {
+  body?: string;
+  size?: "sm" | "lg";
+};
+
+const { body, size = "sm" } = Astro.props;
+
+const t = useTranslations(Astro.currentLocale);
+const minutes = getReadingTime(body);
+---
+
+<!-- Same look as Datetime so the two sit side by side -->
+<div class="text-muted-foreground flex items-center gap-x-2">
+  <IconClock
+    aria-hidden="true"
+    class:list={[
+      "inline-block size-6 min-w-5.5",
+      { "scale-90": size === "sm" },
+    ]}
+  />
+  <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
+    {tplStr(t.post.readingTime, { minutes })}
+  </span>
+</div>

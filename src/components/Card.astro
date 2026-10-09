@@ -4,12 +4,13 @@ import { Image } from "astro:assets";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
+import ReadingTime from "./ReadingTime.astro";
 
 type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"posts">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const { variant: Heading = "h2", id, data, filePath, body } = Astro.props;
 
 // The post's ogImage doubles as its thumbnail; no image, no thumbnail.
 const { title, description, ogImage, ...props } = data;
@@ -37,7 +38,10 @@ const thumbnailClass =
           {title}
         </Heading>
       </a>
-      <Datetime {...props} />
+      <div class="flex flex-wrap items-center gap-x-4">
+        <Datetime {...props} />
+        <ReadingTime {body} />
+      </div>
       <p class="mt-1 line-clamp-2">{description}</p>
     </div>
     {
