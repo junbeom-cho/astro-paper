@@ -5,13 +5,15 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
-import Card from "@/components/Card.astro";
+import Datetime from "@/components/Datetime.astro";
 import Footer from "@/components/Footer.astro";
+import IconFolder from "@/assets/icons/IconFolder.svg";
 import {
   getCategoryTree,
   getPostsInCategory,
   parseCategory,
 } from "@/utils/categories";
+import { getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
@@ -36,6 +38,14 @@ const t = useTranslations(locale);
 
 const categoryUrl = (...slugs: string[]) =>
   getRelativeLocaleUrl(locale, `categories/${slugs.join("/")}/`);
+
+// Tree layout: each list draws the vertical guide (border-s), each item a
+// short horizontal branch (before:) into it.
+const branchList = "border-foreground/20 ms-3 mt-2 space-y-3 border-s ps-6";
+const branchItem =
+  "before:border-foreground/20 relative before:absolute before:top-3 before:-inset-s-6 before:w-4 before:border-t";
+// Post rows keep the date beside the title when there is room
+const postItem = `${branchItem} flex flex-wrap items-center gap-x-3`;
 ---
 
 <Layout title={`${t.pages.categoriesTitle} | ${config.site.title}`}>
@@ -44,54 +54,70 @@ const categoryUrl = (...slugs: string[]) =>
   <Breadcrumb />
 
   <Main pageTitle={t.pages.categoriesTitle} pageDesc={t.pages.categoriesDesc}>
-    <div class="space-y-8">
+    <ul class="space-y-10">
       {
         categories.map(parent => (
-          <section class="border-border rounded-lg border px-5 py-4">
-            <h2 class="text-xl font-semibold">
+          <li>
+            <h2 class="flex items-center gap-2 text-xl font-semibold">
+              <IconFolder class="text-accent size-6 shrink-0" />
               <a
                 href={categoryUrl(parent.slug)}
                 class="hover:text-accent focus-visible:text-accent"
               >
                 {parent.name}
               </a>
-              <span class="text-muted-foreground ms-1 text-base font-normal">
+              <span class="text-muted-foreground text-base font-normal">
                 ({parent.count})
               </span>
             </h2>
 
-            {parent.posts.length > 0 && (
-              <ul class="[&>li]:my-4">
-                {parent.posts.map(post => (
-                  <Card variant="h3" {...post} />
-                ))}
-              </ul>
-            )}
-
-            {parent.children.map(child => (
-              <section class="border-border bg-muted/20 mt-4 rounded-md border px-4 py-3">
-                <h3 class="text-lg font-medium">
+            <ul class={branchList}>
+              {parent.posts.map(post => (
+                <li class={postItem}>
                   <a
-                    href={categoryUrl(parent.slug, child.slug)}
-                    class="hover:text-accent focus-visible:text-accent"
+                    href={getPostUrl(post.id, post.filePath, locale)}
+                    class="text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
                   >
-                    {child.name}
+                    {post.data.title}
                   </a>
-                  <span class="text-muted-foreground ms-1 text-sm font-normal">
-                    ({child.count})
-                  </span>
-                </h3>
-                <ul class="[&>li]:my-3">
-                  {child.posts.map(post => (
-                    <Card variant="h4" {...post} />
-                  ))}
-                </ul>
-              </section>
-            ))}
-          </section>
+                  <Datetime {...post.data} />
+                </li>
+              ))}
+
+              {parent.children.map(child => (
+                <li class={branchItem}>
+                  <h3 class="flex items-center gap-2 text-lg font-semibold">
+                    <IconFolder class="text-accent size-5 shrink-0" />
+                    <a
+                      href={categoryUrl(parent.slug, child.slug)}
+                      class="hover:text-accent focus-visible:text-accent"
+                    >
+                      {child.name}
+                    </a>
+                    <span class="text-muted-foreground text-sm font-normal">
+                      ({child.count})
+                    </span>
+                  </h3>
+                  <ul class={branchList}>
+                    {child.posts.map(post => (
+                      <li class={postItem}>
+                        <a
+                          href={getPostUrl(post.id, post.filePath, locale)}
+                          class="text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
+                        >
+                          {post.data.title}
+                        </a>
+                        <Datetime {...post.data} />
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </li>
         ))
       }
-    </div>
+    </ul>
   </Main>
 
   <Footer />
