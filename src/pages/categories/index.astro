@@ -8,6 +8,7 @@ import Main from "@/components/Main.astro";
 import Datetime from "@/components/Datetime.astro";
 import Footer from "@/components/Footer.astro";
 import IconFolder from "@/assets/icons/IconFolder.svg";
+import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import {
   getCategoryTree,
   getPostsInCategory,
@@ -46,6 +47,10 @@ const branchItem =
   "before:border-foreground/20 relative before:absolute before:top-3 before:-inset-s-6 before:w-4 before:border-t";
 // Post rows keep the date beside the title when there is room
 const postItem = `${branchItem} flex flex-wrap items-center gap-x-3`;
+// Folders fold with <details>; the chevron points right when closed, down when open
+const summary = "cursor-pointer list-none [&::-webkit-details-marker]:hidden";
+const chevron =
+  "text-muted-foreground shrink-0 rotate-180 transition-transform";
 ---
 
 <Layout title={`${t.pages.categoriesTitle} | ${config.site.title}`}>
@@ -58,62 +63,84 @@ const postItem = `${branchItem} flex flex-wrap items-center gap-x-3`;
       {
         categories.map(parent => (
           <li>
-            <h2 class="flex items-center gap-2 text-xl font-semibold">
-              <IconFolder class="text-accent size-6 shrink-0" />
-              <a
-                href={categoryUrl(parent.slug)}
-                class="hover:text-accent focus-visible:text-accent"
-              >
-                {parent.name}
-              </a>
-              <span class="text-muted-foreground text-base font-normal">
-                ({parent.count})
-              </span>
-            </h2>
-
-            <ul class={branchList}>
-              {parent.posts.map(post => (
-                <li class={postItem}>
+            <details open class="group/parent">
+              <summary class={summary}>
+                <h2 class="flex items-center gap-2 text-xl font-semibold">
+                  <IconFolder class="text-accent size-6 shrink-0" />
                   <a
-                    href={getPostUrl(post.id, post.filePath, locale)}
-                    class="text-foreground hover:text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
+                    href={categoryUrl(parent.slug)}
+                    class="hover:text-accent focus-visible:text-accent"
                   >
-                    {post.data.title}
+                    {parent.name}
                   </a>
-                  <Datetime {...post.data} />
-                </li>
-              ))}
+                  <span class="text-muted-foreground text-base font-normal">
+                    ({parent.count})
+                  </span>
+                  <IconChevronLeft
+                    aria-hidden="true"
+                    class:list={[
+                      chevron,
+                      "size-5 group-open/parent:-rotate-90",
+                    ]}
+                  />
+                </h2>
+              </summary>
 
-              {parent.children.map(child => (
-                <li class={branchItem}>
-                  <h3 class="flex items-center gap-2 text-lg font-semibold">
-                    <IconFolder class="text-accent size-5 shrink-0" />
+              <ul class={branchList}>
+                {parent.posts.map(post => (
+                  <li class={postItem}>
                     <a
-                      href={categoryUrl(parent.slug, child.slug)}
-                      class="hover:text-accent focus-visible:text-accent"
+                      href={getPostUrl(post.id, post.filePath, locale)}
+                      class="text-foreground hover:text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
                     >
-                      {child.name}
+                      {post.data.title}
                     </a>
-                    <span class="text-muted-foreground text-sm font-normal">
-                      ({child.count})
-                    </span>
-                  </h3>
-                  <ul class={branchList}>
-                    {child.posts.map(post => (
-                      <li class={postItem}>
-                        <a
-                          href={getPostUrl(post.id, post.filePath, locale)}
-                          class="text-foreground hover:text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
-                        >
-                          {post.data.title}
-                        </a>
-                        <Datetime {...post.data} />
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
+                    <Datetime {...post.data} />
+                  </li>
+                ))}
+
+                {parent.children.map(child => (
+                  <li class={branchItem}>
+                    <details class="group/child">
+                      <summary class={summary}>
+                        <h3 class="flex items-center gap-2 text-lg font-semibold">
+                          <IconFolder class="text-accent size-5 shrink-0" />
+                          <a
+                            href={categoryUrl(parent.slug, child.slug)}
+                            class="hover:text-accent focus-visible:text-accent"
+                          >
+                            {child.name}
+                          </a>
+                          <span class="text-muted-foreground text-sm font-normal">
+                            ({child.count})
+                          </span>
+                          <IconChevronLeft
+                            aria-hidden="true"
+                            class:list={[
+                              chevron,
+                              "size-4 group-open/child:-rotate-90",
+                            ]}
+                          />
+                        </h3>
+                      </summary>
+                      <ul class={branchList}>
+                        {child.posts.map(post => (
+                          <li class={postItem}>
+                            <a
+                              href={getPostUrl(post.id, post.filePath, locale)}
+                              class="text-foreground hover:text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
+                            >
+                              {post.data.title}
+                            </a>
+                            <Datetime {...post.data} />
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                ))}
+              </ul>
+            </details>
           </li>
         ))
       }
