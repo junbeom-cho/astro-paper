@@ -2,6 +2,7 @@
 title: Mermaid 다이어그램 예시
 description: 마크다운 코드블록 하나로 그리는 Mermaid 다이어그램 모음
 pubDatetime: 2026-10-08T10:00:00+09:00
+category: 예시
 tags:
   - mermaid
 ---

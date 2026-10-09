@@ -2,6 +2,7 @@
 title: 오른쪽 목차 예시
 description: 글의 제목(h2, h3)으로 오른쪽 목차가 자동으로 만들어지는 모습
 pubDatetime: 2026-10-09T10:00:00+09:00
+category: 예시
 tags:
   - toc
 ---

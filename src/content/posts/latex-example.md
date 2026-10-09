@@ -2,6 +2,7 @@
 title: LaTeX 수식 예시
 description: 마크다운에서 KaTeX로 그리는 LaTeX 수식 모음
 pubDatetime: 2026-10-08T18:00:00+09:00
+category: 예시
 tags:
   - latex
 ---

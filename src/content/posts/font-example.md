@@ -2,6 +2,7 @@
 title: 폰트 예시
 description: 본문은 Pretendard, 코드는 JetBrains Mono로 보이는 모습
 pubDatetime: 2026-10-09T17:00:00+09:00
+category: 예시
 tags:
   - font
 ---

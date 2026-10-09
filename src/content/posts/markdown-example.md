@@ -2,6 +2,7 @@
 title: Markdown 문법 예시
 description: 이 블로그에서 쓸 수 있는 Markdown 문법 모음 (Callout, 코드블록, 표, 각주 등)
 pubDatetime: 2026-10-08T18:30:00+09:00
+category: 예시
 tags:
   - markdown
 ---
