@@ -1,31 +1,34 @@
+import type { CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { slug as githubSlug } from "github-slugger";
 import { BLOG_PATH } from "@/content.config";
 import { slugifyStr } from "./slugify";
 import config from "@/config";
 
-function getPostPathSegments(filePath: string | undefined): string[] {
-  return (
-    filePath
-      ?.replace(BLOG_PATH, "")
-      .split("/")
-      .filter(path => path !== "")
-      .filter(path => !path.startsWith("_"))
-      .slice(0, -1)
-      .map(segment => slugifyStr(segment)) ?? []
-  );
-}
+type PostRef = Pick<CollectionEntry<"posts">, "id" | "filePath"> & {
+  data: Pick<CollectionEntry<"posts">["data"], "slug">;
+};
 
-function getIdSlug(id: string): string {
-  const postId = id.split("/");
-  return postId.length > 0 ? String(postId[postId.length - 1]) : id;
-}
+// "20261011-my-post" or "2026-10-11-my-post": the date only sorts files
+const DATE_PREFIX = /^(?:\d{8}|\d{4}-\d{2}-\d{2})-(?=.)/;
 
-function getPostSlugPath(id: string, filePath: string | undefined): string {
-  const pathSegments = getPostPathSegments(filePath);
-  const slug = getIdSlug(id);
-  return pathSegments.length > 0
-    ? [...pathSegments, slug].join("/")
-    : String(slug);
+/**
+ * Folders (minus `_`-prefixed ones) followed by the frontmatter `slug`, or
+ * else the filename without its date prefix.
+ * e.g. `개발/20261011-My Post.md` → `개발/my-post`
+ */
+function getPostSlugPath({ id, filePath, data }: PostRef): string {
+  const segments = (filePath?.replace(BLOG_PATH, "") ?? id)
+    .split("/")
+    .filter(segment => segment !== "");
+  const fileName = (segments.pop() ?? "").replace(/\.[^.]+$/, "");
+  const folders = segments
+    .filter(segment => !segment.startsWith("_"))
+    .map(segment => slugifyStr(segment));
+  const slug =
+    data.slug ??
+    (githubSlug(fileName.replace(DATE_PREFIX, "")) || githubSlug(fileName));
+  return [...folders, slug].join("/");
 }
 
 /**
@@ -33,8 +36,8 @@ function getPostSlugPath(id: string, filePath: string | undefined): string {
  * No base prefix, no locale — Astro handles those at a higher level.
  * e.g. `/examples/my-post`
  */
-export function getPostSlug(id: string, filePath: string | undefined): string {
-  return `/${getPostSlugPath(id, filePath)}`;
+export function getPostSlug(post: PostRef): string {
+  return `/${getPostSlugPath(post)}`;
 }
 
 /**
@@ -44,9 +47,26 @@ export function getPostSlug(id: string, filePath: string | undefined): string {
  * e.g. `/posts/my-post` or `/en/posts/my-post`
  */
 export function getPostUrl(
-  id: string,
-  filePath: string | undefined,
+  post: PostRef,
   locale: string | undefined = config.site.lang
 ): string {
-  return getRelativeLocaleUrl(locale, `posts/${getPostSlugPath(id, filePath)}`);
+  return getRelativeLocaleUrl(locale, `posts/${getPostSlugPath(post)}`);
+}
+
+/**
+ * Throws if two posts, drafts included, resolve to the same URL. Otherwise
+ * the build keeps one of them and every link to the other opens the wrong post.
+ */
+export function assertUniquePostSlugs(posts: PostRef[]) {
+  const owners = new Map<string, string>();
+  for (const post of posts) {
+    const slug = getPostSlug(post);
+    const owner = owners.get(slug);
+    if (owner) {
+      throw new Error(
+        `"${owner}" and "${post.filePath ?? post.id}" both resolve to /posts${slug}/. Rename one of them or set a different \`slug\` in its frontmatter.`
+      );
+    }
+    owners.set(slug, post.filePath ?? post.id);
+  }
 }

@@ -90,7 +90,7 @@ const chevron =
                 {parent.posts.map(post => (
                   <li class={postItem}>
                     <a
-                      href={getPostUrl(post.id, post.filePath, locale)}
+                      href={getPostUrl(post, locale)}
                       class="text-foreground hover:text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
                     >
                       {post.data.title}
@@ -127,7 +127,7 @@ const chevron =
                         {child.posts.map(post => (
                           <li class={postItem}>
                             <a
-                              href={getPostUrl(post.id, post.filePath, locale)}
+                              href={getPostUrl(post, locale)}
                               class="text-foreground hover:text-accent font-medium decoration-dashed underline-offset-4 hover:underline"
                             >
                               {post.data.title}

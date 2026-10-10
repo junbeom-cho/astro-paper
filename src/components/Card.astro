@@ -25,7 +25,7 @@ const thumbnailClass =
   >
     <div class="min-w-0 flex-1">
       <a
-        href={getPostUrl(id, filePath, Astro.currentLocale)}
+        href={getPostUrl({ id, filePath, data }, Astro.currentLocale)}
         class:list={[
           "text-foreground hover:text-accent inline-block text-lg font-medium",
           "decoration-dashed underline-offset-4 hover:underline",

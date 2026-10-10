@@ -6,9 +6,24 @@ import config from "@/config";
 export const BLOG_PATH = "src/content/posts";
 
 const posts = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${BLOG_PATH}` }),
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx}",
+    base: `./${BLOG_PATH}`,
+    // The file path, so every file is its own entry. Astro's default would use
+    // the frontmatter `slug`, and two posts sharing one would overwrite each
+    // other. URLs come from getPostPaths, not from the id.
+    generateId: ({ entry }) => entry,
+  }),
   schema: ({ image }) =>
     z.object({
+      // Overrides the URL slug that otherwise comes from the filename
+      slug: z
+        .string()
+        .regex(
+          /^[a-z0-9가-힣]+(-[a-z0-9가-힣]+)*$/,
+          "slug may only contain lowercase letters, digits, Hangul and single hyphens"
+        )
+        .optional(),
       author: z.string().default(config.site.author),
       pubDatetime: z.date(),
       modDatetime: z.date().optional().nullable(),
