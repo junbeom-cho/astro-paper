@@ -16,12 +16,14 @@ if (!about) {
 }
 
 const { Content } = await render(about);
+
+const { ogImage } = about.data;
 ---
 
 <Layout
   title={`${about.data.title} | ${config.site.title}`}
   description={about.data.description}
-  ogImage={about.data.ogImage}
+  ogImage={typeof ogImage === "string" ? ogImage : ogImage?.src}
   canonicalURL={about.data.canonicalURL}
 >
   <Header />

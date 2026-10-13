@@ -3,6 +3,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
+import IconArticle from "@/assets/icons/IconArticle.svg";
 import IconFolder from "@/assets/icons/IconFolder.svg";
 import IconHash from "@/assets/icons/IconHash.svg";
 import IconUser from "@/assets/icons/IconUser.svg";
@@ -83,6 +84,15 @@ const isActive = (path: string) => {
         id="menu-items"
         class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 xl:w-full xl:flex-wrap xl:place-content-start xl:gap-x-2 xl:gap-y-1 sm:[&>li]:h-8 xl:[&>li]:h-auto [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1 xl:[&>li>a]:px-0 xl:[&>li>a]:text-start"
       >
+        <li class="col-span-2 xl:w-full">
+          <a
+            href={getRelativeLocaleUrl(locale, "posts")}
+            class:list={{ "active-nav": isActive("/posts") }}
+          >
+            <IconArticle aria-hidden="true" class={navIconClass} />
+            {t.nav.posts}
+          </a>
+        </li>
         <li class="col-span-2 xl:w-full">
           <a
             href={getRelativeLocaleUrl(locale, "categories")}

@@ -23,6 +23,9 @@ import config from "./astro-paper.config";
 
 export default defineConfig({
   site: config.site.url,
+  // Two routes building the same URL (e.g. a post at /posts/2/ and the post
+  // list page 2) fails the build instead of silently dropping one page
+  prerenderConflictBehavior: "error",
   integrations: [
     mdx(),
     sitemap({

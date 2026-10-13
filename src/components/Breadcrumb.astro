@@ -25,6 +25,7 @@ const decodeSegment = (value: string) => {
 };
 
 const navLabels: Record<string, string> = {
+  posts: t.nav.posts,
   categories: t.nav.categories,
   tags: t.nav.tags,
   about: t.nav.about,
@@ -35,23 +36,26 @@ const navLabels: Record<string, string> = {
 const pageLabel = (page: string) =>
   `(${t.pagination.page.toLowerCase()} ${page})`;
 
+type Crumb = { label: string; href: string; suffix?: string };
+
 // Each crumb links to the path up to its segment, eg: /categories/개발
-const crumbs = segments.map((segment, i) => ({
+const crumbs: Crumb[] = segments.map((segment, i) => ({
   label: navLabels[segment] ?? decodeSegment(segment),
   href: getRelativeLocaleUrl(locale, segments.slice(0, i + 1).join("/")),
 }));
 
+// Home > Posts > [page] => Home > Posts (page number), and
 // Home > Tags|Categories > ... > [name] > [page] => ... > [name] (page number)
 const lastSegment = segments.at(-1) ?? "";
-if (
-  (segments[0] === "tags" || segments[0] === "categories") &&
-  segments.length > 2 &&
-  !isNaN(Number(lastSegment))
-) {
+const isListPage =
+  (segments[0] === "posts" && segments.length === 2) ||
+  ((segments[0] === "tags" || segments[0] === "categories") &&
+    segments.length > 2);
+if (isListPage && !isNaN(Number(lastSegment))) {
   crumbs.pop();
   const nameCrumb = crumbs.at(-1);
   if (nameCrumb && lastSegment !== "1") {
-    nameCrumb.label += ` ${pageLabel(lastSegment)}`;
+    nameCrumb.suffix = pageLabel(lastSegment);
   }
 }
 ---
@@ -67,7 +71,7 @@ if (
       <span aria-hidden="true" class="opacity-80">&raquo;</span>
     </li>
     {
-      crumbs.map(({ label, href }, index) =>
+      crumbs.map(({ label, href, suffix }, index) =>
         index + 1 === crumbs.length ? (
           <li>
             <span
@@ -76,6 +80,8 @@ if (
             >
               {/* make the last part lowercase in Home > Tags > some-tag */}
               {label}
+              {/* "(page 2)" stays lowercase even after a capitalized "Posts" */}
+              {suffix && <span class="lowercase">{` ${suffix}`}</span>}
             </span>
           </li>
         ) : (

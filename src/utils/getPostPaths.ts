@@ -54,13 +54,25 @@ export function getPostUrl(
 }
 
 /**
- * Throws if two posts, drafts included, resolve to the same URL. Otherwise
- * the build keeps one of them and every link to the other opens the wrong post.
+ * Throws if two posts, drafts included, resolve to the same URL, or a post
+ * resolves to a post list page (/posts/, /posts/2/). Otherwise the build keeps
+ * one of them and every link to the other opens the wrong page.
  */
 export function assertUniquePostSlugs(posts: PostRef[]) {
   const owners = new Map<string, string>();
   for (const post of posts) {
     const slug = getPostSlug(post);
+    // A filename made only of symbols or emoji ("🎉.md") slugifies to nothing
+    if (slug.endsWith("/")) {
+      throw new Error(
+        `"${post.filePath ?? post.id}" has no letters or digits to use in its URL. Rename it or set a \`slug\` in its frontmatter.`
+      );
+    }
+    if (/^\/\d+$/.test(slug)) {
+      throw new Error(
+        `"${post.filePath ?? post.id}" resolves to /posts${slug}/, which is reserved for the post list pages. Rename it or set a \`slug\` in its frontmatter.`
+      );
+    }
     const owner = owners.get(slug);
     if (owner) {
       throw new Error(
