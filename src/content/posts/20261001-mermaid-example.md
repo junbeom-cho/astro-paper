@@ -1,10 +1,15 @@
 ---
 title: Mermaid 다이어그램 예시
 description: 마크다운 코드블록 하나로 그리는 Mermaid 다이어그램 모음
-pubDatetime: 2026-10-08T10:00:00+09:00
+pubDatetime: 2026-10-01T01:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - mermaid
+featured: false
+draft: false
+ogImage:
 ---
 
 코드블록 언어를 `mermaid`로 지정하면 다이어그램으로 그려집니다. 테마를 바꾸면 다이어그램 색도 같이 바뀝니다.

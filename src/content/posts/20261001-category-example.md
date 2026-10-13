@@ -1,10 +1,15 @@
 ---
 title: 카테고리 예시
 description: frontmatter의 category로 글을 2단계 분류에 넣는 방법
-pubDatetime: 2026-10-09T17:00:00+09:00
+pubDatetime: 2026-10-01T05:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시/카테고리
 tags:
   - category
+featured: false
+draft: false
+ogImage:
 ---
 
 글 하나는 카테고리 하나에 속합니다. 카테고리는 글이 속한 큰 분류이고, 태그는 여러 개 달 수 있는 세부 분류입니다.

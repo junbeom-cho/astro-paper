@@ -1,10 +1,15 @@
 ---
 title: 폰트 예시
 description: 본문은 Pretendard, 코드는 JetBrains Mono로 보이는 모습
-pubDatetime: 2026-10-09T17:00:00+09:00
+pubDatetime: 2026-10-01T06:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - font
+featured: false
+draft: false
+ogImage:
 ---
 
 본문은 **Pretendard**, 코드는 **JetBrains Mono**로 표시됩니다. 두 폰트 모두 기기와 상관없이 같은 모양으로 보입니다.

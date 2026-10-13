@@ -1,10 +1,15 @@
 ---
 title: 읽는 시간 예시
 description: 글 본문 길이로 계산한 예상 읽기 시간이 날짜 옆에 표시되는 모습
-pubDatetime: 2026-10-10T01:00:00+09:00
+pubDatetime: 2026-10-01T08:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - reading-time
+featured: false
+draft: false
+ogImage:
 ---
 
 글 제목 아래와 글 목록 카드의 날짜 옆에 시계 아이콘과 함께 예상 읽기 시간이 표시됩니다. 따로 적을 것은 없고, 빌드할 때 본문 길이로 계산됩니다.

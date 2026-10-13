@@ -1,13 +1,18 @@
 ---
 title: Markdown 문법 예시
 description: 이 블로그에서 쓸 수 있는 Markdown 문법 모음 (Callout, 코드블록, 표, 각주 등)
-pubDatetime: 2026-10-08T18:30:00+09:00
+pubDatetime: 2026-10-01T03:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - markdown
+featured: false
+draft: false
+ogImage:
 ---
 
-이 블로그에서 쓸 수 있는 Markdown 문법을 모았습니다. 각 문법을 어떻게 쓰는지는 이 글의 원본 `src/content/posts/markdown-example.md`를 같이 열어 보면 됩니다.
+이 블로그에서 쓸 수 있는 Markdown 문법을 모았습니다. 각 문법을 어떻게 쓰는지는 이 글의 원본 `src/content/posts/20261001-markdown-example.md`를 같이 열어 보면 됩니다.
 
 ## Table of contents
 

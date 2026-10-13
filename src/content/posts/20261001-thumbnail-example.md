@@ -1,11 +1,15 @@
 ---
 title: 썸네일 예시
 description: frontmatter의 ogImage가 글 목록 카드의 썸네일과 SNS 공유 이미지로 함께 쓰이는 모습
-pubDatetime: 2026-10-09T18:00:00+09:00
+pubDatetime: 2026-10-01T07:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
-ogImage: ../../assets/images/thumbnail-example.png
 tags:
   - thumbnail
+featured: false
+draft: false
+ogImage: ../../assets/images/thumbnail-example.png
 ---
 
 글 목록(홈, Archives, 태그·카테고리 페이지)의 카드 오른쪽에 썸네일이 보입니다. 이 글의 카드에 보이는 이미지가 썸네일입니다.

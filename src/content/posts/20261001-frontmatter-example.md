@@ -1,10 +1,15 @@
 ---
 title: Frontmatter 예시
 description: 글 맨 위 frontmatter에 쓸 수 있는 항목과 각 항목이 하는 일
-pubDatetime: 2026-10-12T01:00:00+09:00
+pubDatetime: 2026-10-01T11:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - frontmatter
+featured: false
+draft: false
+ogImage:
 ---
 
 frontmatter는 글 맨 위 `---` 두 줄 사이에 적는 글의 설정입니다. 제목, 날짜, 분류처럼 본문 밖의 정보를 여기에 적습니다.
@@ -36,15 +41,17 @@ category: 개발/Astro
 tags:
   - astro
   - migration
-slug: moving-to-astro
 featured: true
 draft: false
 ogImage: ../../assets/images/cover.png
+slug: moving-to-astro
 canonicalURL: https://example.com/original-post
 author: Junbeom Cho
 hideEditPost: true
 ---
 ```
+
+이 블로그의 글은 `title`부터 `ogImage`까지 10개 항목을 이 순서로 적습니다. 수정일이나 이미지가 없으면 `modDatetime:`, `ogImage:`처럼 값을 비워 둡니다. 값을 비워 둘 수 있는 항목은 이 두 개뿐입니다. `category:`, `tags:`처럼 다른 항목을 비우면 기본값이 쓰이지 않고 빌드 에러가 나므로, 쓰지 않을 항목은 줄째 지웁니다.
 
 ## 필수 항목
 
@@ -67,11 +74,11 @@ hideEditPost: true
 
 | 항목             | 하는 일                                                                     |
 | ---------------- | --------------------------------------------------------------------------- |
-| `draft: true`    | 글을 사이트 어디에도 내보내지 않습니다. dev 서버에서도 보이지 않습니다.     |
+| `draft: true`    | 배포 사이트 어디에도 내보내지 않습니다. dev 서버에서는 보입니다.            |
 | `featured: true` | 홈의 **Featured** 칸에 올립니다. 대신 **Recent Posts** 목록에서는 빠집니다. |
 | `slug`           | URL을 직접 정합니다. 없으면 파일명에서 날짜를 뗀 값이 URL이 됩니다.         |
 
-`draft`는 작성 중인 글을 커밋해 두고 다른 컴퓨터에서 이어 쓸 때 유용합니다. 다만 숨겨지는 곳은 사이트뿐이라, 저장소가 공개라면 push한 초안은 GitHub에서 누구나 볼 수 있습니다. 초안도 필수 항목이 빠지거나 다른 글과 URL이 겹치면 빌드 에러가 납니다.
+`draft`는 작성 중인 글을 커밋해 두고 다른 컴퓨터에서 이어 쓸 때 유용합니다. dev 서버에서는 보이므로 실제 모습을 보면서 쓸 수 있고, 배포 사이트에서 빠지는지는 `pnpm build` 후 `pnpm preview`로 확인할 수 있습니다. 다만 숨겨지는 곳은 사이트뿐이라, 저장소가 공개라면 push한 초안은 GitHub에서 누구나 볼 수 있습니다. 초안도 필수 항목이 빠지거나 다른 글과 URL이 겹치면 빌드 에러가 납니다.
 
 URL 규칙은 [파일명과 URL 예시](/posts/slug-example/)에 있습니다.
 

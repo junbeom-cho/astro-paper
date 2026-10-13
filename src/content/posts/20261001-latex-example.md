@@ -1,10 +1,15 @@
 ---
 title: LaTeX 수식 예시
 description: 마크다운에서 KaTeX로 그리는 LaTeX 수식 모음
-pubDatetime: 2026-10-08T18:00:00+09:00
+pubDatetime: 2026-10-01T02:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - latex
+featured: false
+draft: false
+ogImage:
 ---
 
 달러 기호로 감싸면 LaTeX 수식으로 그려집니다. 빌드할 때 HTML로 변환되므로 JavaScript 없이도 보입니다.

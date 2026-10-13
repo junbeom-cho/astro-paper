@@ -1,22 +1,27 @@
 ---
 title: 파일명과 URL 예시
 description: 파일명 앞에 날짜를 붙여 정렬하고, URL은 날짜 없이 쓰는 방법
-pubDatetime: 2026-10-11T01:00:00+09:00
+pubDatetime: 2026-10-01T10:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시/URL
 tags:
   - slug
+featured: false
+draft: false
+ogImage:
 ---
 
 글의 URL은 파일명으로 정해집니다. 파일명 앞에 날짜를 붙이면 에디터의 파일 목록이 날짜순으로 정렬되고, URL에서는 그 날짜가 빠집니다.
 
 ## 파일명 → URL
 
-이 글의 파일명은 `20261011-slug-example.md`이고, URL은 `/posts/slug-example/`입니다.
+이 글의 파일명은 `20261001-slug-example.md`이고, URL은 `/posts/slug-example/`입니다.
 
 | 파일명                        | URL                       |
 | ----------------------------- | ------------------------- |
-| `20261011-slug-example.md`    | `/posts/slug-example/`    |
-| `2026-10-11-slug-example.md`  | `/posts/slug-example/`    |
+| `20261001-slug-example.md`    | `/posts/slug-example/`    |
+| `2026-10-01-slug-example.md`  | `/posts/slug-example/`    |
 | `slug-example.md`             | `/posts/slug-example/`    |
 | `20261011-My Post.md`         | `/posts/my-post/`         |
 | `개발/20261011-astro-tips.md` | `/posts/개발/astro-tips/` |
@@ -46,4 +51,5 @@ slug: moving-to-astro
 ## 주의할 점
 
 - **두 글이 같은 URL이 되면 빌드 에러가 납니다.** `draft` 글도 포함합니다. 예를 들어 `20261011-til.md`와 `20261012-til.md`, `_2025/20251011-til.md`는 모두 `/posts/til/`이 됩니다. 파일명을 바꾸거나 한쪽에 `slug`를 적어 주세요. dev 서버에서는 글 페이지를 열 때 같은 에러가 보입니다.
+- **숫자로만 된 URL은 쓸 수 없습니다.** `/posts/2/`, `/posts/3/`은 전체 글 목록의 페이지 번호라서, `20261001-2024.md`처럼 URL이 `/posts/2024/`가 되는 글은 빌드 에러가 납니다. `2024-회고`처럼 글자를 붙여 주세요.
 - **게시한 뒤에는 URL을 바꾸지 마세요.** 파일명의 날짜 뒷부분이나 `slug`를 바꾸면 URL이 바뀌어 기존 링크와 댓글 연결이 끊깁니다. 날짜 접두사만 붙이거나 바꾸는 건 URL에 영향이 없습니다.

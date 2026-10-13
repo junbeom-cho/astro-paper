@@ -1,10 +1,15 @@
 ---
 title: 댓글 예시
 description: 글 하단의 giscus 댓글이 GitHub Discussions에 저장되는 방식
-pubDatetime: 2026-10-10T03:30:00+09:00
+pubDatetime: 2026-10-01T09:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - comments
+featured: false
+draft: false
+ogImage:
 ---
 
 모든 글 하단에 댓글 영역이 있습니다. 이 글 맨 아래에서 직접 댓글을 남겨 볼 수 있습니다.

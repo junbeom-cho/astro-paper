@@ -1,10 +1,15 @@
 ---
 title: 오른쪽 목차 예시
 description: 글의 제목(h2, h3)으로 오른쪽 목차가 자동으로 만들어지는 모습
-pubDatetime: 2026-10-09T10:00:00+09:00
+pubDatetime: 2026-10-01T04:00:00+09:00
+modDatetime:
+timezone: Asia/Seoul
 category: 예시
 tags:
   - toc
+featured: false
+draft: false
+ogImage:
 ---
 
 글에 `##`, `###` 제목을 쓰면 화면 오른쪽에 목차가 자동으로 생깁니다. 따로 넣을 것은 없습니다.
