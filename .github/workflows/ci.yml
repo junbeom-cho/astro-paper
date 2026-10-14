@@ -1,36 +1,44 @@
 name: CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
-    name: Code standards & build
+    name: Build & check
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: "☁️ Checkout repository"
-        uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      # Node and pnpm at the versions pinned in mise.toml, same as local
-      - name: "📦 Install Node.js & pnpm"
-        uses: jdx/mise-action@v4
+      # mise.toml의 Node·pnpm 버전 (서버 배포와 같음)
+      - name: Install Node.js & pnpm
+        uses: jdx/mise-action@v5
 
-      - name: "📦 Install dependencies"
-        run: pnpm install --frozen-lockfile
+      # 서버 배포와 같은 설치·빌드·검사를 실행 (사이트는 교체하지 않음)
+      - name: Deploy check
+        id: deploy
+        run: deploy/deploy.sh --ci
 
-      - name: "🔎 Lint code"
+      # Deploy check가 실패해도 실행해 결과를 따로 보여준다
+      - name: Lint
+        if: ${{ !cancelled() && steps.deploy.outcome != 'skipped' }}
         run: pnpm run lint
 
-      - name: "📝 Checking code format"
+      - name: Check format
+        if: ${{ !cancelled() && steps.deploy.outcome != 'skipped' }}
         run: pnpm run format:check
-
-      - name: "🚀 Build the project"
-        run: pnpm run build

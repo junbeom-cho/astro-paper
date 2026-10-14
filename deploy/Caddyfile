@@ -1,0 +1,34 @@
+# ==== Astro-Paper ===========================================================
+@astro-paper host blog.techbara.dev
+
+handle @astro-paper {
+	root * /srv/blog
+	encode zstd gzip
+
+	@hashed path /_astro/*
+	header @hashed {
+		match status 2xx 304
+		Cache-Control "public, max-age=31536000, immutable"
+	}
+	header ?Cache-Control "public, no-cache"
+
+	# rsync 임시 폴더(.~tmp~)만 숨김 (.well-known 같은 다른 점 경로는 서빙)
+	file_server {
+		hide .~tmp~
+	}
+}
+
+handle_errors 404 {
+	handle @astro-paper {
+		# 에러 응답에는 사이트 보안 헤더가 붙지 않으므로 다시 붙임
+		import security
+		header Cache-Control "no-store"
+		# 조건부·Range 요청에도 404 페이지 전체를 보냄
+		request_header -If-*
+		request_header -Range
+		root * /srv/blog
+		rewrite * /404.html
+		encode zstd gzip
+		file_server
+	}
+}
