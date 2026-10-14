@@ -1,0 +1,20 @@
+# Site block for the Caddy already running on the server: paste it into the
+# main Caddyfile (or `import` this file), then run `caddy reload`.
+blog.techbara.dev {
+	# Where the build output (dist/) is copied, see README
+	root * /srv/blog
+	encode zstd gzip
+
+	# Astro's hashed bundles never change, so browsers can keep them for a year
+	@assets path /_astro/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# Directories serve index.html; /posts/foo redirects to /posts/foo/
+	file_server
+
+	# Serve dist/404.html, keeping the 404 status
+	handle_errors {
+		rewrite * /{err.status_code}.html
+		file_server
+	}
+}

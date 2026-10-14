@@ -28,6 +28,3 @@ public/pagefind
 
 # pnpm
 .pnpm-store
-
-# wrangler
-.wrangler/

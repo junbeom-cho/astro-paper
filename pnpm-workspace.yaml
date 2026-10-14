@@ -1,10 +1,7 @@
-# Single-package repo. pnpm 9-10 (Cloudflare's default build image pnpm is
-# 10.11.1) refuse a pnpm-workspace.yaml without "packages".
+# Single-package repo. pnpm 9-10 refuse a pnpm-workspace.yaml without "packages".
 packages:
   - "."
 
 allowBuilds:
   esbuild: true
   sharp: true
-  # wrangler -> workerd postinstall; pnpm fails the install without this
-  workerd: true
