@@ -107,6 +107,37 @@ const rssHref = getAssetPath("rss.xml");
       })();
     </script>
 
+    <script is:inline>
+      // 검색 페이지는 입력할 때마다 주소의 ?q=를 바꾸는데, Umami가 이를 페이지뷰로 세지 않게 한다
+      window.umamiBeforeSend = (_type, payload) => {
+        const isSearch = url =>
+          /^\/search\/?$/.test(new URL(url || "/", location.origin).pathname);
+        const searchTyping =
+          !payload.name &&
+          payload.referrer?.startsWith("/") &&
+          isSearch(payload.url) &&
+          isSearch(payload.referrer);
+        return searchTyping ? false : payload;
+      };
+
+      // Umami가 느리거나 닿지 않아도 사이트 스크립트(첫 astro:page-load 포함)가 기다리지 않게 load 뒤에 넣는다
+      addEventListener(
+        "load",
+        () => {
+          const umamiScript = document.createElement("script");
+          umamiScript.src = "https://umami.techbara.dev/script.js";
+          Object.assign(umamiScript.dataset, {
+            websiteId: "0f7b9e06-b442-4c17-863a-e6390cbe7bc0",
+            domains: "blog.techbara.dev",
+            excludeHash: "true",
+            beforeSend: "umamiBeforeSend",
+          });
+          document.head.append(umamiScript);
+        },
+        { once: true }
+      );
+    </script>
+
     <ClientRouter />
   </head>
   <body
