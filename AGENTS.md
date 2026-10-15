@@ -4,7 +4,9 @@
 
 ## 기능 추가
 
-마크다운 문법, 플러그인 같은 기능을 추가하면 사용법을 보여주는 예시 글을 `src/content/posts/<기능>-example.md`로 함께 만든다. 예: `mermaid-example.md`.
+마크다운 문법, 플러그인 같은 기능을 추가하면 사용법을 보여주는 예시 글을 `src/content/posts/<YYYYMMDD>-<기능>-example.md`로 함께 만든다. 날짜는 글의 `pubDatetime`과 같게 한다. 예: `20261001-mermaid-example.md`.
+
+예시 글은 frontmatter를 다른 예시 글과 같은 항목·순서로 적고, `category: 예시`(또는 `예시/<하위 카테고리>`)와 `draft: true`를 넣는다. draft 글은 `pnpm dev`에서만 보이고 배포 빌드(`pnpm build`)에서는 빠지므로, 예시 글이 배포 사이트에 올라가지 않는다.
 
 ## Development
 

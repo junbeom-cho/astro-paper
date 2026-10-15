@@ -8,7 +8,7 @@ category: 예시/카테고리
 tags:
   - category
 featured: false
-draft: false
+draft: true
 ogImage:
 ---
 

@@ -8,7 +8,7 @@ category: 예시
 tags:
   - frontmatter
 featured: false
-draft: false
+draft: true
 ogImage:
 ---
 

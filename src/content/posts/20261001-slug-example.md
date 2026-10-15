@@ -8,7 +8,7 @@ category: 예시/URL
 tags:
   - slug
 featured: false
-draft: false
+draft: true
 ogImage:
 ---
 

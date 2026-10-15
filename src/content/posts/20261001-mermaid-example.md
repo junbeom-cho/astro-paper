@@ -8,7 +8,7 @@ category: 예시
 tags:
   - mermaid
 featured: false
-draft: false
+draft: true
 ogImage:
 ---
 

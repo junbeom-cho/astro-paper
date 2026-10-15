@@ -8,7 +8,7 @@ category: 예시
 tags:
   - thumbnail
 featured: false
-draft: false
+draft: true
 ogImage: ../../assets/images/thumbnail-example.png
 ---
 
