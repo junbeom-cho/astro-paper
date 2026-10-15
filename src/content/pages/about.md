@@ -10,7 +10,7 @@ ogImage: ../../assets/images/about/capybara-profile.jpg
 
 ## 하는 일
 
-- (주)프람트테크놀로지 전임 연구원
+- **(주)프람트테크놀로지** 전임 연구원
 - 주로 쓰는 기술: Spring-Boot
 
 ## 이 블로그에서 다루는 것
