@@ -8,6 +8,7 @@ import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getSchemaRefs } from "@/utils/structuredData";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -21,9 +22,29 @@ const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const homePath = getRelativeLocaleUrl(locale, "");
+
+const { homeUrl, websiteId, author } = getSchemaRefs(Astro.site, locale);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": websiteId,
+  name: config.site.title,
+  url: homeUrl,
+  // Posts are written in Korean while the UI stays in site.lang
+  inLanguage: "ko",
+  author,
+};
 ---
 
 <Layout>
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+  </Fragment>
+
   <Header />
   <main
     id="main-content"

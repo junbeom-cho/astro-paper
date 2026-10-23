@@ -60,7 +60,10 @@ const postMarker =
   "before:bg-accent before:ring-background relative before:absolute before:top-2 before:-inset-s-[29.5px] before:size-2.5 before:rounded-full before:ring-4";
 ---
 
-<Layout title={`${t.pages.archivesTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.archivesTitle} | ${config.site.title}`}
+  description={t.pages.archivesDesc}
+>
   <Header />
 
   <Breadcrumb />

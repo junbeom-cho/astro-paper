@@ -3,8 +3,8 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://blog.techbara.dev",
-    title: "Tech Blog",
-    description: "A minimal, responsive and SEO-friendly Astro blog theme.",
+    title: "Techbara Blog",
+    description: "개발자 조준범이 일하며 부딪힌 문제와 해결 과정, 회고를 기록하는 기술 블로그",
     author: "Junbeom Cho",
     profile: "https://github.com/junbeom-cho",
     ogImage: "default-og.jpg",

@@ -29,8 +29,11 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      // The search page is noindex (search.astro), so it stays out too
       filter: page =>
-        config.features?.showArchives !== false || !page.endsWith("/archives/"),
+        !page.endsWith("/search/") &&
+        (config.features?.showArchives !== false ||
+          !page.endsWith("/archives/")),
     }),
   ],
   i18n: {

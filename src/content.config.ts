@@ -56,6 +56,15 @@ const pages = defineCollection({
       description: z.string().optional(),
       ogImage: image().or(z.string()).optional(),
       canonicalURL: z.string().optional(),
+      // About page: extra Person fields for its JSON-LD (the name is site.author)
+      person: z
+        .object({
+          alternateName: z.string().optional(),
+          jobTitle: z.string().optional(),
+          worksFor: z.string().optional(),
+          sameAs: z.array(z.string()).optional(),
+        })
+        .optional(),
     }),
 });
 

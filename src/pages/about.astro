@@ -5,6 +5,7 @@ import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
+import { getSchemaRefs } from "@/utils/structuredData";
 import config from "@/config";
 
 const about = await getEntry("pages", "about");
@@ -17,15 +18,47 @@ if (!about) {
 
 const { Content } = await render(about);
 
-const { ogImage } = about.data;
+const { ogImage, person } = about.data;
+const ogImagePath = typeof ogImage === "string" ? ogImage : ogImage?.src;
+
+// The Person that posts and the home page point at as their author
+const locale = Astro.currentLocale ?? config.site.lang;
+const { aboutUrl, author } = getSchemaRefs(Astro.site, locale);
+const sameAs = [
+  ...new Set([...(author.sameAs ?? []), ...(person?.sameAs ?? [])]),
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  url: aboutUrl,
+  mainEntity: {
+    ...author,
+    alternateName: person?.alternateName,
+    jobTitle: person?.jobTitle,
+    ...(person?.worksFor && {
+      worksFor: { "@type": "Organization", name: person.worksFor },
+    }),
+    ...(ogImagePath && { image: new URL(ogImagePath, Astro.site).href }),
+    ...(sameAs.length > 0 && { sameAs }),
+  },
+};
 ---
 
 <Layout
   title={`${about.data.title} | ${config.site.title}`}
   description={about.data.description}
-  ogImage={typeof ogImage === "string" ? ogImage : ogImage?.src}
+  ogImage={ogImagePath}
   canonicalURL={about.data.canonicalURL}
 >
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+  </Fragment>
+
   <Header />
 
   <Breadcrumb />

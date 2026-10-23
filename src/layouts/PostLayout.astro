@@ -1,44 +1,63 @@
 ---
 import Layout from "./Layout.astro";
+import { getSchemaRefs } from "@/utils/structuredData";
 import config from "@/config";
 import "katex/dist/katex.min.css";
 
 type Props = {
   title?: string;
+  /** Post title without the site title suffix, for BlogPosting.headline */
+  headline?: string;
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  tags?: string[];
+  category?: string;
 };
 
 const { site } = config;
 
-const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
-  Astro.props;
+const {
+  title,
+  headline,
+  description,
+  ogImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  tags,
+  category,
+} = Astro.props;
+
+const locale = Astro.currentLocale ?? site.lang;
+const pageURL = canonicalURL ?? new URL(Astro.url.pathname, Astro.site).href;
+const { author, websiteId } = getSchemaRefs(Astro.site, locale);
+// A post never edited since publishing was last modified when published
+const lastModified = modDatetime ?? pubDatetime;
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: title ?? site.title,
+  headline: headline ?? title ?? site.title,
+  description,
+  url: pageURL,
+  mainEntityOfPage: pageURL,
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: site.author,
-      ...(site.profile && { url: site.profile }),
-    },
-  ],
+  ...(lastModified && { dateModified: lastModified.toISOString() }),
+  // Posts are written in Korean, like the lang="ko" on the article
+  inLanguage: "ko",
+  keywords: tags,
+  articleSection: category,
+  author: [author],
+  isPartOf: { "@id": websiteId },
 };
 ---
 
-<Layout {title} {description} {ogImage} {canonicalURL}>
+<Layout {title} {description} {ogImage} canonicalURL={pageURL} ogType="article">
   <Fragment slot="head">
-    <!-- Override og:type for article pages -->
-    <meta property="og:type" content="article" />
-
     {
       pubDatetime && (
         <meta
