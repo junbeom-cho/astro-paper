@@ -34,7 +34,7 @@ const thumbnailClass =
           "after:absolute after:inset-0",
         ]}
       >
-        <Heading transition:name={toTransitionName(id)}>
+        <Heading lang="ko" transition:name={toTransitionName(id)}>
           {title}
         </Heading>
       </a>
@@ -42,7 +42,7 @@ const thumbnailClass =
         <Datetime {...props} />
         <ReadingTime {body} />
       </div>
-      <p class="mt-1 line-clamp-2">{description}</p>
+      <p lang="ko" class="mt-1 line-clamp-2">{description}</p>
     </div>
     {
       ogImage &&

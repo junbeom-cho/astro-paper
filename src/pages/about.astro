@@ -64,7 +64,10 @@ const structuredData = {
   <Breadcrumb />
 
   <Main pageTitle={about.data.title} class="app-prose">
-    <Content />
+    {/* The page text is Korean while the UI stays in site.lang */}
+    <div lang="ko">
+      <Content />
+    </div>
   </Main>
 
   <Footer />

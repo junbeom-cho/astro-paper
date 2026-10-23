@@ -22,6 +22,10 @@ const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const homePath = getRelativeLocaleUrl(locale, "");
+const aboutPath = getRelativeLocaleUrl(locale, "about");
+// Same look as the category links on post pages
+const introLink =
+  "text-accent decoration-accent/40 hover:decoration-accent underline underline-offset-4";
 
 const { homeUrl, websiteId, author } = getSchemaRefs(Astro.site, locale);
 const structuredData = {
@@ -53,6 +57,23 @@ const structuredData = {
     class="app-layout my-1"
   >
     <h1 class="sr-only">{config.site.title}</h1>
+
+    {/* Example intro: who writes here and about what. Edit the copy freely */}
+    <section
+      id="intro"
+      lang="ko"
+      class:list={[
+        "space-y-3 pt-8 pb-6",
+        { "border-border border-b": sortedPosts.length > 0 },
+      ]}
+    >
+      <p>안녕하세요, 기록하는 개발자 조준범입니다.</p>
+      <p>
+        일하며 부딪힌 문제와 해결 과정, 일하고 공부하면서 생긴 의문을 탐구한
+        내용, 그리고 회고를 기록합니다. 더 자세한 소개는{" "}
+        <a href={aboutPath} class={introLink}>About 페이지</a>에 있습니다.
+      </p>
+    </section>
 
     {
       featuredPosts.length > 0 && (

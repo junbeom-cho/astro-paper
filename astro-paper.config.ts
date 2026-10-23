@@ -3,7 +3,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://blog.techbara.dev",
-    title: "Techbara Blog",
+    title: "Techbara.dev",
     description: "개발자 조준범이 일하며 부딪힌 문제와 해결 과정, 회고를 기록하는 기술 블로그",
     author: "Junbeom Cho",
     profile: "https://github.com/junbeom-cho",

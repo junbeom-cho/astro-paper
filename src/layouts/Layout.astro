@@ -59,6 +59,8 @@ const rssHref = getAssetPath("rss.xml");
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.title} />
+    <!-- Content is Korean even though the UI stays in site.lang -->
+    <meta property="og:locale" content="ko_KR" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
