@@ -100,6 +100,14 @@ interface AstroPaperConfig {
   socials?: SocialLink[];
   /** Share links shown on post detail pages */
   shareLinks?: ShareLink[];
+  /**
+   * Category icons, keyed by the category as written in frontmatter:
+   * "개발" or "개발/Astro". The value is an emoji, or the name of an SVG in
+   * src/assets/icons/categories/ (e.g. "astro" → astro.svg).
+   * A subcategory without its own icon uses its parent's; categories with
+   * neither show a folder.
+   */
+  categoryIcons?: Record<string, string>;
 }
 
 type ResolvedSiteConfig = Required<
@@ -123,6 +131,7 @@ export interface ResolvedAstroPaperConfig {
   features: Required<FeaturesConfig>;
   socials: SocialLink[];
   shareLinks: ShareLink[];
+  categoryIcons: Record<string, string>;
 }
 
 /**

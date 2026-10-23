@@ -38,4 +38,10 @@ export default defineAstroPaperConfig({
     { name: "facebook", url: "https://www.facebook.com/sharer.php?u=" },
     { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
   ],
+  // 이모지, 또는 src/assets/icons/categories/의 SVG 파일 이름
+  categoryIcons: {
+    "예시":          "📝",
+    "예시/카테고리": "🗂️",
+    "예시/URL":      "link",
+  },
 });

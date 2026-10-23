@@ -32,6 +32,8 @@ export interface UIStrings {
     featured: string;
     recentPosts: string;
     allPosts: string;
+    allCategories: string;
+    allTags: string;
   };
   footer: {
     copyright: string;

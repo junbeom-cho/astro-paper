@@ -3,6 +3,8 @@ import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
+import { getCategoryIcon, parseCategory } from "@/utils/categories";
+import CategoryIcon from "./CategoryIcon.astro";
 import Datetime from "./Datetime.astro";
 import ReadingTime from "./ReadingTime.astro";
 
@@ -13,7 +15,9 @@ type Props = {
 const { variant: Heading = "h2", id, data, filePath, body } = Astro.props;
 
 // The post's ogImage doubles as its thumbnail; no image, no thumbnail.
-const { title, description, ogImage, ...props } = data;
+const { title, description, ogImage, category, tags, ...props } = data;
+
+const categoryLevels = parseCategory(category);
 
 const thumbnailClass =
   "aspect-[1.91/1] w-24 shrink-0 self-center rounded-md object-cover sm:w-40";
@@ -41,8 +45,24 @@ const thumbnailClass =
       <div class="flex flex-wrap items-center gap-x-4">
         <Datetime {...props} />
         <ReadingTime {body} />
+        <div class="text-muted-foreground flex items-center gap-x-1.5">
+          <CategoryIcon icon={getCategoryIcon(categoryLevels)} />
+          <span lang="ko" class="text-sm">
+            {categoryLevels.map(({ name }) => name).join(" / ")}
+          </span>
+        </div>
       </div>
       <p lang="ko" class="mt-1 line-clamp-2">{description}</p>
+      {/* Styled like Tag but not links: the card itself is the link */}
+      <ul class="mt-2 flex flex-wrap gap-1.5">
+        {
+          tags.map(tag => (
+            <li class="bg-accent/10 text-accent rounded-full px-2 py-0.5 text-xs">
+              #{tag}
+            </li>
+          ))
+        }
+      </ul>
     </div>
     {
       ogImage &&

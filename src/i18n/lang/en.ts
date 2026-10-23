@@ -34,6 +34,8 @@ export default {
     featured: "Featured",
     recentPosts: "Recent Posts",
     allPosts: "All Posts",
+    allCategories: "All Categories",
+    allTags: "All Tags",
   },
   footer: {
     copyright: "Copyright",

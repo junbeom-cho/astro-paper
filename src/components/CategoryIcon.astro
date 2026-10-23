@@ -1,0 +1,43 @@
+---
+import IconFolder from "@/assets/icons/IconFolder.svg";
+
+type Props = {
+  /** Emoji or SVG name from categoryIcons; none shows a folder */
+  icon?: string;
+  class?: string;
+};
+
+const { icon, class: className } = Astro.props;
+
+const svgIcons = import.meta.glob<{
+  default: (_props: Record<string, unknown>) => unknown;
+}>("/src/assets/icons/categories/*.svg");
+
+// Plain names like "astro" are SVG files; anything else (an emoji) is text
+const svgPath = `/src/assets/icons/categories/${icon}.svg`;
+const isSvgName = icon !== undefined && /^[\w-]+$/.test(icon);
+if (isSvgName && !svgIcons[svgPath]) {
+  throw new Error(
+    `Category icon "${icon}" not found: add ${svgPath.slice(1)} or use an emoji`
+  );
+}
+const Svg = isSvgName ? (await svgIcons[svgPath]()).default : undefined;
+---
+
+<!-- Sized from the font size, so it matches the text beside it -->
+<span
+  aria-hidden="true"
+  class:list={[
+    "inline-flex size-[1.25em] shrink-0 items-center justify-center leading-none",
+    className,
+  ]}
+>
+  {
+    Svg ? (
+      // Single-color SVGs (no fill set) take the text color, so they show in both themes
+      <Svg class="size-full [&:not([fill])]:fill-current" />
+    ) : (
+      (icon ?? <IconFolder class="size-full" />)
+    )
+  }
+</span>

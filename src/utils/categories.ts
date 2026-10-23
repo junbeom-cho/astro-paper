@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import config from "@/config";
 import { postFilter } from "./postFilter";
 import { slugifyStr } from "./slugify";
 
@@ -7,6 +8,8 @@ export type CategoryNode = {
   slug: string;
   /** Label as written in frontmatter, e.g. "Astro" */
   name: string;
+  /** Emoji or SVG name from categoryIcons, see getCategoryIcon */
+  icon?: string;
   /** Posts in this category, including its subcategories */
   count: number;
   children: CategoryNode[];
@@ -27,6 +30,25 @@ export function getCategoryPath(levels: CategoryLevel[]): string {
   return levels.map(({ slug }) => slug).join("/");
 }
 
+// Keyed by path like the tree, so "개발/Astro" and "개발/astro" both match
+const categoryIcons = new Map(
+  Object.entries(config.categoryIcons).map(([category, icon]) => [
+    getCategoryPath(parseCategory(category)),
+    icon,
+  ])
+);
+
+/**
+ * Icon for the category these levels name: its own from `categoryIcons`,
+ * else its parent's. Undefined when neither has one.
+ */
+export function getCategoryIcon(levels: CategoryLevel[]) {
+  for (let depth = levels.length; depth > 0; depth--) {
+    const icon = categoryIcons.get(getCategoryPath(levels.slice(0, depth)));
+    if (icon) return icon;
+  }
+}
+
 /**
  * Builds the two-level category tree with post counts, sorted by slug.
  * Drafts and scheduled posts are excluded via `postFilter()`.
@@ -34,17 +56,21 @@ export function getCategoryPath(levels: CategoryLevel[]): string {
 export function getCategoryTree(posts: CollectionEntry<"posts">[]) {
   const tree: CategoryNode[] = [];
 
-  const count = (nodes: CategoryNode[], { slug, name }: CategoryLevel) => {
+  const count = (nodes: CategoryNode[], levels: CategoryLevel[]) => {
+    const { slug, name } = levels[levels.length - 1];
     let node = nodes.find(n => n.slug === slug);
-    if (!node) nodes.push((node = { slug, name, count: 0, children: [] }));
+    if (!node) {
+      const icon = getCategoryIcon(levels);
+      nodes.push((node = { slug, name, icon, count: 0, children: [] }));
+    }
     node.count++;
     return node;
   };
 
   for (const { data } of posts.filter(postFilter)) {
-    const [parent, child] = parseCategory(data.category);
-    const node = count(tree, parent);
-    if (child) count(node.children, child);
+    const levels = parseCategory(data.category);
+    const node = count(tree, levels.slice(0, 1));
+    if (levels.length > 1) count(node.children, levels);
   }
 
   const bySlug = (a: CategoryNode, b: CategoryNode) =>
